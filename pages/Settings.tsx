@@ -1,0 +1,163 @@
+
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
+import { saveNotificationSettings, getNotificationSettings } from '../services/db';
+import { NotificationSettings } from '../types';
+import { Bell, Shield, Save, Loader2, Info, User, Smartphone, Share, PlusSquare } from 'lucide-react';
+
+const Settings: React.FC = () => {
+  const { currentUser } = useAuth();
+  const { addToast } = useToast();
+  const [settings, setSettings] = useState<NotificationSettings>({ alertDaysBefore: 1, enabled: true });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (currentUser) {
+      getNotificationSettings(currentUser.uid).then(data => {
+        setSettings(data);
+        setLoading(false);
+      });
+    }
+  }, [currentUser]);
+
+  const handleSave = async () => {
+    if (!currentUser) return;
+    setSaving(true);
+    try {
+      await saveNotificationSettings(currentUser.uid, settings);
+      addToast("Configurações salvas!", "success");
+    } catch (error) {
+      addToast('Erro ao salvar.', "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <div className="p-20 flex justify-center"><Loader2 className="animate-spin text-emerald-600" size={32} /></div>;
+
+  return (
+    <div className="min-h-screen bg-[#f8fafc] pb-24">
+      {/* Header Emerald */}
+      <div className="bg-emerald-600 pt-16 pb-20 px-8 text-white rounded-b-[50px] shadow-lg">
+        <h2 className="text-3xl font-black tracking-tight mb-2">Ajustes</h2>
+        <p className="text-sm font-medium opacity-70 tracking-wide uppercase">Gerencie sua conta e notificações</p>
+      </div>
+
+      <div className="px-6 -mt-10 space-y-6 max-w-2xl mx-auto">
+        {/* Bloco Perfil */}
+        <div className="bg-white p-6 rounded-[32px] shadow-sm border border-slate-50 flex items-center gap-4">
+           <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center"><User size={32} /></div>
+           <div>
+              <p className="text-lg font-black text-slate-800">{currentUser?.email?.split('@')[0]}</p>
+              <p className="text-xs font-bold text-slate-400">{currentUser?.email}</p>
+           </div>
+        </div>
+
+        {/* Bloco Notificações */}
+        <div className="bg-white rounded-[40px] shadow-sm border border-slate-50 overflow-hidden">
+          <div className="p-8 border-b border-slate-50 flex items-center gap-4">
+            <div className="p-4 bg-emerald-50 text-emerald-600 rounded-2xl"><Bell size={24} /></div>
+            <div>
+              <h3 className="text-lg font-black text-slate-800">Notificações</h3>
+              <p className="text-xs font-bold text-slate-400">Controle seus alertas de vencimento</p>
+            </div>
+          </div>
+
+          <div className="p-8 space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="block font-bold text-slate-800">Alertas Ativos</span>
+                <p className="text-xs font-medium text-slate-400 mt-1">Exibir avisos de contas a pagar</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" checked={settings.enabled} onChange={e => setSettings({...settings, enabled: e.target.checked})} className="sr-only peer" />
+                <div className="w-14 h-8 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-600"></div>
+              </label>
+            </div>
+
+            <div className={`space-y-6 transition-all ${settings.enabled ? 'opacity-100' : 'opacity-30 pointer-events-none'}`}>
+              <div>
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Notificar com antecedência:</label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[0, 1, 3, 7].map(days => (
+                    <button key={days} onClick={() => setSettings({...settings, alertDaysBefore: days})} className={`py-4 rounded-2xl text-xs font-bold border-2 transition-all ${settings.alertDaysBefore === days ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'bg-white border-slate-50 text-slate-400 hover:border-slate-200'}`}>
+                      {days === 0 ? 'No dia' : `${days} dias`}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-blue-50 p-5 rounded-3xl flex gap-4">
+                 <Info className="text-blue-500 shrink-0" size={20} />
+                 <p className="text-xs font-bold text-blue-700 leading-relaxed">Você será alertado pelo sistema {settings.alertDaysBefore === 0 ? 'exatamente no dia' : `com ${settings.alertDaysBefore} dias de antecedência`} do vencimento.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-8 bg-slate-50 border-t border-slate-100">
+             <button onClick={handleSave} disabled={saving} className="w-full bg-slate-900 hover:bg-black text-white py-5 rounded-3xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl transition-all active:scale-95">
+               {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />} Salvar Configurações
+             </button>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-50 flex items-center gap-4">
+            <div className="p-3 bg-slate-100 text-slate-400 rounded-xl"><Shield size={24} /></div>
+            <div>
+              <h3 className="font-bold text-slate-800">Privacidade e Dados</h3>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Armazenamento seguro via Firebase</p>
+            </div>
+        </div>
+
+        {/* Bloco Instalação PWA */}
+        <div className="bg-emerald-50 rounded-[40px] p-8 border border-emerald-100">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-4 bg-emerald-600 text-white rounded-2xl shadow-lg shadow-emerald-200">
+              <Smartphone size={24} />
+            </div>
+            <div>
+              <h3 className="text-lg font-black text-slate-800">Instalar Aplicativo</h3>
+              <p className="text-xs font-bold text-emerald-700">Acesse como um app nativo</p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-3xl border border-white">
+              <h4 className="font-black text-slate-800 text-sm mb-4 flex items-center gap-2">
+                <span className="w-6 h-6 bg-emerald-600 text-white rounded-full flex items-center justify-center text-[10px]">1</span>
+                No iPhone (Safari)
+              </h4>
+              <ul className="space-y-4 text-xs font-bold text-slate-600">
+                <li className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm border border-slate-100 shrink-0">
+                    <Share size={16} className="text-blue-500" />
+                  </div>
+                  <span>Toque no botão de <strong>Compartilhar</strong></span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm border border-slate-100 shrink-0">
+                    <PlusSquare size={16} className="text-slate-700" />
+                  </div>
+                  <span>Selecione <strong>"Adicionar à Tela de Início"</strong></span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-3xl border border-white">
+              <h4 className="font-black text-slate-800 text-sm mb-4 flex items-center gap-2">
+                <span className="w-6 h-6 bg-emerald-600 text-white rounded-full flex items-center justify-center text-[10px]">2</span>
+                No Android (Chrome)
+              </h4>
+              <p className="text-xs font-bold text-slate-600 leading-relaxed">
+                Toque nos <strong>três pontos (⋮)</strong> no canto superior direito e selecione <strong>"Instalar aplicativo"</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Settings;
