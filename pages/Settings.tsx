@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { saveNotificationSettings, getNotificationSettings } from '../services/db';
 import { NotificationSettings } from '../types';
-import { Bell, Shield, Save, Loader2, Info, User, Smartphone, Share, PlusSquare } from 'lucide-react';
+import { Bell, Shield, Save, Loader2, Info, User } from 'lucide-react';
 
 const Settings: React.FC = () => {
   const { currentUser } = useAuth();
@@ -108,52 +108,6 @@ const Settings: React.FC = () => {
               <h3 className="font-bold text-slate-800">Privacidade e Dados</h3>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Armazenamento seguro via Firebase</p>
             </div>
-        </div>
-
-        {/* Bloco Instalação PWA */}
-        <div className="bg-emerald-50 rounded-[40px] p-8 border border-emerald-100">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="p-4 bg-emerald-600 text-white rounded-2xl shadow-lg shadow-emerald-200">
-              <Smartphone size={24} />
-            </div>
-            <div>
-              <h3 className="text-lg font-black text-slate-800">Instalar Aplicativo</h3>
-              <p className="text-xs font-bold text-emerald-700">Acesse como um app nativo</p>
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-3xl border border-white">
-              <h4 className="font-black text-slate-800 text-sm mb-4 flex items-center gap-2">
-                <span className="w-6 h-6 bg-emerald-600 text-white rounded-full flex items-center justify-center text-[10px]">1</span>
-                No iPhone (Safari)
-              </h4>
-              <ul className="space-y-4 text-xs font-bold text-slate-600">
-                <li className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm border border-slate-100 shrink-0">
-                    <Share size={16} className="text-blue-500" />
-                  </div>
-                  <span>Toque no botão de <strong>Compartilhar</strong></span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm border border-slate-100 shrink-0">
-                    <PlusSquare size={16} className="text-slate-700" />
-                  </div>
-                  <span>Selecione <strong>"Adicionar à Tela de Início"</strong></span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-3xl border border-white">
-              <h4 className="font-black text-slate-800 text-sm mb-4 flex items-center gap-2">
-                <span className="w-6 h-6 bg-emerald-600 text-white rounded-full flex items-center justify-center text-[10px]">2</span>
-                No Android (Chrome)
-              </h4>
-              <p className="text-xs font-bold text-slate-600 leading-relaxed">
-                Toque nos <strong>três pontos (⋮)</strong> no canto superior direito e selecione <strong>"Instalar aplicativo"</strong>.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

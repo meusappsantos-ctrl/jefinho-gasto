@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { Wallet, ArrowRight, AlertCircle, Lock, Mail } from 'lucide-react';
@@ -46,7 +46,7 @@ const Login: React.FC = () => {
           <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-md shadow-lg border border-white/10">
             <Wallet className="text-white" size={32} />
           </div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Meu controle de gasto, Jefinho</h1>
+          <h1 className="text-3xl font-bold text-white tracking-tight">MeuControle</h1>
           <p className="text-emerald-100 text-sm mt-2 font-medium">Finanças sob controle, vida tranquila.</p>
         </div>
 
@@ -105,15 +105,6 @@ const Login: React.FC = () => {
               )}
             </button>
           </form>
-
-          <div className="mt-8 text-center">
-            <p className="text-sm text-slate-500 font-medium">
-              Não tem uma conta?{' '}
-              <Link to="/register" className="text-emerald-600 font-bold hover:underline hover:text-emerald-700 transition-colors">
-                Cadastre-se
-              </Link>
-            </p>
-          </div>
         </div>
       </div>
     </div>

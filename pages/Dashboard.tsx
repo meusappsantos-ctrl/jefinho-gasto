@@ -142,7 +142,7 @@ const Dashboard: React.FC = () => {
              <ChevronRight className="rotate-180" size={20} />
           </button>
           <div className="flex flex-col items-center">
-             <h1 className="text-sm font-black uppercase tracking-[3px] opacity-70">Jefinho</h1>
+             <h1 className="text-sm font-black uppercase tracking-[3px] opacity-70">MeuControle</h1>
              <p className="text-xl font-black">{fullMonths[currentMonth]} {currentYear}</p>
           </div>
           <button onClick={() => handleMonthOffset(1)} className="p-2 bg-white/10 rounded-full">

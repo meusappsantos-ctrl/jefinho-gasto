@@ -14,7 +14,6 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import { getTransactions, getNotificationSettings } from '../services/db';
 import { Transaction, NotificationSettings } from '../types';
-import IOSInstallPrompt from './IOSInstallPrompt';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -25,6 +24,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    if (currentUser) {
+      loadNotifications();
+    }
+  }, [currentUser, location.pathname]);
 
   const loadNotifications = async () => {
     if (!currentUser) return;
@@ -48,12 +53,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     setNotifications(alerts.sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()));
   };
 
-  useEffect(() => {
-    if (currentUser) {
-      loadNotifications();
-    }
-  }, [currentUser, location.pathname]);
-
   const navItems = [
     { name: 'Home', path: '/', icon: LayoutDashboard },
     { name: 'Gastos', path: '/expenses', icon: Wallet },
@@ -67,7 +66,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col font-sans">
-      <IOSInstallPrompt />
       
       {/* Sidebar Desktop (Esquerda) */}
       <aside className="hidden md:flex fixed h-full w-64 bg-white text-slate-800 flex-col top-0 left-0 z-20 border-r border-slate-100 shadow-sm">
@@ -75,7 +73,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white font-black shadow-lg shadow-emerald-200">
             $
           </div>
-          <h1 className="text-lg font-black text-slate-900 tracking-tight">Jefinho</h1>
+          <h1 className="text-lg font-black text-slate-900 tracking-tight">MeuControle</h1>
         </div>
 
         <nav className="flex-1 px-4 space-y-2">
