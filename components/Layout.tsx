@@ -14,7 +14,7 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import { getTransactions, getNotificationSettings } from '../services/db';
 import { Transaction, NotificationSettings } from '../types';
-import InstallPrompt from './InstallPrompt';
+import IOSInstallPrompt from './IOSInstallPrompt';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -67,6 +67,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col font-sans">
+      <IOSInstallPrompt />
       
       {/* Sidebar Desktop (Esquerda) */}
       <aside className="hidden md:flex fixed h-full w-64 bg-white text-slate-800 flex-col top-0 left-0 z-20 border-r border-slate-100 shadow-sm">
@@ -153,7 +154,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       )}
 
-      <InstallPrompt />
     </div>
   );
 };
