@@ -108,8 +108,8 @@ const Login: React.FC = () => {
 
           <div className="mt-8 text-center">
             <p className="text-sm text-slate-500 font-medium">
-              Não possui uma conta?{' '}
-              <Link to="/register" className="text-slate-900 font-bold hover:underline hover:text-slate-700 transition-colors">
+              Não tem uma conta?{' '}
+              <Link to="/register" className="text-emerald-600 font-bold hover:underline hover:text-emerald-700 transition-colors">
                 Cadastre-se
               </Link>
             </p>
